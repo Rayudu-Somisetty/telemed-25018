@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleMed - Telemedicine App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Language Selection Screen -->
+    <div id="language-screen" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <h1>🏥 TeleMed</h1>
+            </div>
+            <h2>Select Your Language</h2>
+            <div class="language-options">
+                <button class="language-btn" onclick="selectLanguage('en')">
+                    <span class="flag">🇬🇧</span>
+                    English
+                </button>
+                <button class="language-btn" onclick="selectLanguage('hi')">
+                    <span class="flag">🇮🇳</span>
+                    हिंदी (Hindi)
+                </button>
+                <button class="language-btn" onclick="selectLanguage('pa')">
+                    <span class="flag">🇮🇳</span>
+                    ਪੰਜਾਬੀ (Punjabi)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="container">
+            <div class="logo-small">
+                <h2>🏥 TeleMed</h2>
+            </div>
+            <h3>Login</h3>
+            <form class="form">
+                <div class="input-group">
+                    <label>Aadhar Number / ABHA Number</label>
+                    <input type="text" id="aadhar" placeholder="Enter your Aadhar/ABHA number">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button type="button" class="btn-primary" onclick="login()">Login</button>
+            </form>
+            <div class="divider">
+                <span>Don't have an account?</span>
+            </div>
+            <button class="btn-secondary" onclick="showScreen('register-screen')">Register Now</button>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div id="register-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('login-screen')">←</button>
+                <h3>Register</h3>
+            </div>
+            <form class="form">
+                <div class="input-group">
+                    <label>Upload Authorized Document (Aadhar)</label>
+                    <div class="file-upload">
+                        <input type="file" id="document" accept="image/*,.pdf">
+                        <label for="document" class="file-label">
+                            📄 Choose Document
+                        </label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Mobile Number for OTP Verification</label>
+                    <input type="tel" id="mobile" placeholder="Enter your mobile number">
+                    <button type="button" class="btn-otp" onclick="sendOTP()">Get OTP</button>
+                </div>
+                <div class="input-group" id="otp-group" style="display: none;">
+                    <label>Enter OTP</label>
+                    <input type="text" id="otp" placeholder="Enter 6-digit OTP">
+                </div>
+                <button type="button" class="btn-primary" onclick="verifyAndProceed()">Verify & Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Details Screen -->
+    <div id="user-details-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('register-screen')">←</button>
+                <h3>Personal Details</h3>
+            </div>
+            <form class="form">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" value="Rayudu Somi Setty" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" id="age" value="19" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="dob" value="2005-01-15" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Gender</label>
+                    <select id="gender" disabled>
+                        <option value="male" selected>Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="button" class="btn-primary" onclick="showScreen('address-screen')">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Address Screen -->
+    <div id="address-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('user-details-screen')">←</button>
+                <h3>Address Details</h3>
+            </div>
+            <form class="form">
+                <div class="input-group">
+                    <label>State</label>
+                    <select id="state" onchange="updateDistricts()">
+                        <option value="">Select State</option>
+                        <option value="andhra-pradesh">Andhra Pradesh</option>
+                        <option value="telangana">Telangana</option>
+                        <option value="karnataka">Karnataka</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>District</label>
+                    <select id="district" onchange="updateCities()">
+                        <option value="">Select District</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>City</label>
+                    <select id="city" onchange="updateBlocks()">
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Block (Urban/Rural)</label>
+                    <select id="block" onchange="updateMandals()">
+                        <option value="">Select Block</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Mandal</label>
+                    <select id="mandal" onchange="updateSecretariats()">
+                        <option value="">Select Mandal</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Secretariat</label>
+                    <select id="secretariat">
+                        <option value="">Select Secretariat</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Postal Code</label>
+                    <input type="text" id="pincode" placeholder="Enter PIN code">
+                </div>
+                <div class="input-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                <button type="button" class="btn-primary" onclick="completeRegistration()">Complete Registration</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="screen">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <h3>Welcome, Rayudu</h3>
+                    <p>Patient ID: 1018259369185939</p>
+                </div>
+                <div class="language-toggle">
+                    <button class="lang-btn">EN</button>
+                </div>
+            </div>
+            
+            <div class="consult-section">
+                <button class="consult-btn" onclick="showScreen('symptom-checker-screen')">
+                    <div class="consult-icon">👨‍⚕️</div>
+                    <h4>Consult Doctor</h4>
+                    <p>Get instant medical consultation</p>
+                </button>
+            </div>
+
+            <div class="section">
+                <h4>Previous Consultations</h4>
+                <div class="consultation-list">
+                    <div class="consultation-item">
+                        <div class="consultation-date">Sept 20, 2025</div>
+                        <div class="consultation-doctor">Dr. Naveen Kumar</div>
+                        <div class="consultation-status">Completed</div>
+                    </div>
+                    <div class="consultation-item">
+                        <div class="consultation-date">Sept 15, 2025</div>
+                        <div class="consultation-doctor">Dr. Priya Sharma</div>
+                        <div class="consultation-status">Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showScreen('dashboard-screen')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('consultations-screen')">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Consultations</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('more-screen')">
+                <span class="nav-icon">⋯</span>
+                <span class="nav-label">More</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Symptom Checker Screen -->
+    <div id="symptom-checker-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('dashboard-screen')">←</button>
+                <h3>Create Case</h3>
+            </div>
+            
+            <div class="patient-info">
+                <h4>Rayudu Somi setty (19 Yrs/M)</h4>
+                <p>Mobile: 9494588144</p>
+                <p>Patient ID: 1018259369185939</p>
+                <p>Address: Eluru Rd, Vijayawada, Andhra Pradesh</p>
+            </div>
+
+            <div class="completion-score">
+                <h4>Completion Score: 5.0%</h4>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <form class="form symptom-form">
+                <div class="question-group">
+                    <label>Is it a follow-up consultation?*</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="followup" value="yes"> Yes</label>
+                        <label><input type="radio" name="followup" value="no" checked> No</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-number">1</div>
+                    <div class="question-content">
+                        <h4>Chief Complaints*</h4>
+                        <button type="button" class="add-btn">+</button>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-number">2</div>
+                    <div class="question-content">
+                        <h4>History</h4>
+                        <button type="button" class="arrow-btn">→</button>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-number">3</div>
+                    <div class="question-content">
+                        <h4>Active Medication</h4>
+                        <button type="button" class="add-btn">+</button>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <div class="question-number">4</div>
+                    <div class="question-content">
+                        <h4>Health Records</h4>
+                        <button type="button" class="add-btn">+</button>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label>Query*</label>
+                    <textarea id="query" placeholder="Enter Query" rows="4"></textarea>
+                    <div class="char-count">0/1500</div>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="showScreen('consultation-options-screen')">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Consultation Options Screen -->
+    <div id="consultation-options-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('symptom-checker-screen')">←</button>
+                <h3>Consultation Options</h3>
+            </div>
+            
+            <div class="options-container">
+                <button class="option-btn" onclick="showScreen('video-call-screen')">
+                    <div class="option-icon">📹</div>
+                    <h4>Consult Now</h4>
+                    <p>Start immediate video consultation</p>
+                </button>
+                
+                <button class="option-btn" onclick="bookAppointment()">
+                    <div class="option-icon">📅</div>
+                    <h4>Book Appointment</h4>
+                    <p>Schedule for a later time</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Call Screen -->
+    <div id="video-call-screen" class="screen">
+        <div class="video-container">
+            <div class="video-main">
+                <div class="doctor-video">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2YwZjBmMCIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RHIuIE5hdmVlbiBLdW1hcjwvdGV4dD4KICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI1MCIgcj0iMjAiIGZpbGw9IiNkZGQiLz4KICA8dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NQkJTLCBBbmFlc3RoZXNpYTwvdGV4dD4KPC9zdmc+" alt="Doctor" class="blurred-doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Naveen Kumar</h4>
+                        <p>MBBS, Anaesthesia</p>
+                    </div>
+                </div>
+                
+                <div class="call-controls">
+                    <button class="control-btn" onclick="toggleAudio()">🎵</button>
+                    <button class="control-btn" onclick="toggleVideo()">📹</button>
+                    <button class="control-btn end-call" onclick="endCall()">📞</button>
+                </div>
+            </div>
+            
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <h4>Chat</h4>
+                </div>
+                <div class="chat-messages">
+                    <div class="message doctor">
+                        <span class="sender">Dr. Kumar:</span>
+                        <span class="text">Hello! How can I help you today?</span>
+                    </div>
+                    <div class="message patient">
+                        <span class="sender">You:</span>
+                        <span class="text">I have been experiencing headaches.</span>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Type your message..." id="chatMessage">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultations Screen -->
+    <div id="consultations-screen" class="screen">
+        <div class="container">
+            <h3>Past Consultations</h3>
+            
+            <div class="consultation-history">
+                <div class="consultation-record">
+                    <div class="record-header">
+                        <h4>Sept 20, 2025 - Dr. Naveen Kumar</h4>
+                        <span class="record-status">Completed</span>
+                    </div>
+                    <div class="record-details">
+                        <p><strong>Complaint:</strong> Headache, fever</p>
+                        <p><strong>Diagnosis:</strong> Viral fever</p>
+                        <p><strong>Prescription:</strong> Paracetamol 500mg, Rest</p>
+                    </div>
+                    <button class="view-btn">View Details</button>
+                </div>
+                
+                <div class="consultation-record">
+                    <div class="record-header">
+                        <h4>Sept 15, 2025 - Dr. Priya Sharma</h4>
+                        <span class="record-status">Completed</span>
+                    </div>
+                    <div class="record-details">
+                        <p><strong>Complaint:</strong> Cough, cold</p>
+                        <p><strong>Diagnosis:</strong> Upper respiratory infection</p>
+                        <p><strong>Prescription:</strong> Cough syrup, Steam inhalation</p>
+                    </div>
+                    <button class="view-btn">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" onclick="showScreen('dashboard-screen')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item active" onclick="showScreen('consultations-screen')">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Consultations</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('more-screen')">
+                <span class="nav-icon">⋯</span>
+                <span class="nav-label">More</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- More Options Screen -->
+    <div id="more-screen" class="screen">
+        <div class="container">
+            <h3>More Options</h3>
+            
+            <div class="menu-list">
+                <button class="menu-item" onclick="resetPassword()">
+                    <span class="menu-icon">🔒</span>
+                    <span class="menu-text">Reset Password</span>
+                    <span class="menu-arrow">→</span>
+                </button>
+                
+                <button class="menu-item" onclick="otherMembers()">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">Other Members</span>
+                    <span class="menu-arrow">→</span>
+                </button>
+                
+                <button class="menu-item" onclick="logout()">
+                    <span class="menu-icon">🚪</span>
+                    <span class="menu-text">Logout</span>
+                    <span class="menu-arrow">→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" onclick="showScreen('dashboard-screen')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Dashboard</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('consultations-screen')">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Consultations</span>
+            </button>
+            <button class="nav-item active" onclick="showScreen('more-screen')">
+                <span class="nav-icon">⋯</span>
+                <span class="nav-label">More</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
