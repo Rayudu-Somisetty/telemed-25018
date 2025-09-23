@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Management System - TeleMed</title>
+    <link rel="stylesheet" href="pharmacy.css">
+</head>
+<body>
+    <!-- Pharmacy Login Screen -->
+    <div id="pharmacy-login-screen" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <h1>💊 Medication Management Portal</h1>
+                <p>TeleMed Healthcare Network</p>
+                <p class="subtitle">For Pharmacies & Primary Health Centers</p>
+            </div>
+            
+            <h2>Healthcare Facility Login</h2>
+            <p class="login-description">Both Pharmacies and PHCs can access the same medication management system</p>
+            
+            <form class="form pharmacy-login-form">
+                <div class="input-group">
+                    <label>Staff ID / License Number*</label>
+                    <input type="text" id="pharmacy-staff-id" placeholder="Enter your staff ID or pharmacy license" required>
+                    <small class="field-help">For PHC staff: Use your medical officer ID or staff number</small>
+                </div>
+                
+                <div class="input-group">
+                    <label>Password*</label>
+                    <input type="password" id="pharmacy-password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Healthcare Facility*</label>
+                    <select id="pharmacy-location" required>
+                        <option value="">Select Your Facility</option>
+                        <optgroup label="🏥 Primary Health Centers (PHCs)">
+                            <option value="phc-gandhinagar">PHC Gandhinagar</option>
+                            <option value="phc-patamata">PHC Patamata</option>
+                            <option value="phc-governorpet">PHC Governorpet</option>
+                            <option value="phc-eluru-road">PHC Eluru Road</option>
+                            <option value="phc-kanuru">PHC Kanuru</option>
+                        </optgroup>
+                        <optgroup label="🏪 Private Pharmacies">
+                            <option value="apollo-pharmacy-vijayawada">Apollo Pharmacy - Vijayawada</option>
+                            <option value="medplus-pharmacy-vijayawada">MedPlus Pharmacy - Vijayawada</option>
+                            <option value="reliance-pharmacy">Reliance Smart Pharmacy</option>
+                            <option value="guardian-pharmacy">Guardian Pharmacy</option>
+                        </optgroup>
+                        <optgroup label="🏥 Government Facilities">
+                            <option value="govt-hospital-pharmacy">Government General Hospital Pharmacy</option>
+                            <option value="district-hospital-pharmacy">District Hospital Pharmacy</option>
+                            <option value="chc-pharmacy">Community Health Center Pharmacy</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Your Role*</label>
+                    <select id="user-role" required>
+                        <option value="">Select Your Role</option>
+                        <optgroup label="💊 Pharmacy Staff">
+                            <option value="licensed-pharmacist">Licensed Pharmacist</option>
+                            <option value="pharmacy-assistant">Pharmacy Assistant</option>
+                            <option value="pharmacy-technician">Pharmacy Technician</option>
+                            <option value="pharmacy-supervisor">Pharmacy Supervisor</option>
+                        </optgroup>
+                        <optgroup label="🏥 PHC/Government Staff">
+                            <option value="medical-officer">Medical Officer</option>
+                            <option value="phc-pharmacist">PHC Pharmacist</option>
+                            <option value="staff-nurse">Staff Nurse</option>
+                            <option value="auxiliary-nurse">Auxiliary Nurse Midwife (ANM)</option>
+                            <option value="phc-assistant">PHC Assistant</option>
+                        </optgroup>
+                        <optgroup label="👨‍⚕️ Healthcare Professionals">
+                            <option value="doctor">Doctor/Physician</option>
+                            <option value="nurse">Registered Nurse</option>
+                            <option value="lab-technician">Lab Technician</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <button type="button" class="btn-primary" onclick="pharmacyLogin()">Login to Medication Portal</button>
+            </form>
+            
+            <div class="help-section">
+                <h4>🔒 Secure Access for All Healthcare Facilities</h4>
+                <div class="facility-info">
+                    <div class="facility-type">
+                        <strong>PHC Staff:</strong> Access the same medication inventory, prescriptions, and reporting tools used by pharmacies
+                    </div>
+                    <div class="facility-type">
+                        <strong>Pharmacy Staff:</strong> Complete medication management with patient prescription tracking
+                    </div>
+                </div>
+                
+                <div class="demo-credentials">
+                    <h4>🧪 Demo Credentials for Testing</h4>
+                    <div class="demo-section">
+                        <h5>🏥 Healthcare Staff Demo Login:</h5>
+                        <div class="credential-item">
+                            <strong>Staff ID:</strong> DEMO001 | <strong>Password:</strong> demo123456<br>
+                            <strong>Facility:</strong> Universal Healthcare Access | <strong>Role:</strong> Healthcare Staff
+                        </div>
+                    </div>
+                    
+                    <div class="quick-fill">
+                        <p><strong>Quick Fill Button:</strong></p>
+                        <button type="button" class="demo-btn" onclick="fillDemoCredentials('demo')">Fill Demo Login</button>
+                    </div>
+                </div>
+                        <button type="button" class="demo-btn" onclick="fillDemoCredentials('govt')">Fill Govt Demo</button>
+                    </div>
+                </div>
+                
+                <p>Need help? Contact your facility supervisor or IT support</p>
+                <p>Emergency access: Call 1800-PHARMACY</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pharmacy Dashboard Screen -->
+    <div id="pharmacy-dashboard-screen" class="screen">
+        <div class="container">
+            <div class="pharmacy-header">
+                <div class="pharmacy-info">
+                    <h2>Medication Management Dashboard</h2>
+                    <p id="pharmacy-name">Apollo Pharmacy - Vijayawada</p>
+                    <p id="staff-info">Staff: Dr. Priya Sharma | ID: PH001</p>
+                    <p id="facility-type">Facility Type: Private Pharmacy</p>
+                    <p id="login-time"></p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="showScreen('pharmacy-login-screen')">Switch User</button>
+                    <button class="btn-danger" onclick="pharmacyLogout()">Logout</button>
+                </div>
+            </div>
+            
+            <div class="facility-notice">
+                <p>📋 <strong>Unified System:</strong> Same medication management tools for both Pharmacies and PHCs</p>
+            </div>
+            
+            <div class="pharmacy-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Medicines in Stock</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Pending Orders</div>
+                    </div>
+                </div>
+                <div class="stat-card alert">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Low Stock Alerts</div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-content">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Expiring Soon</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pharmacy-menu">
+                <button class="pharmacy-menu-btn" onclick="showScreen('add-medicine-screen')">
+                    <div class="menu-icon">➕</div>
+                    <div class="menu-content">
+                        <h4>Add Medicine</h4>
+                        <p>Add new medicines to inventory (PHC & Pharmacy)</p>
+                    </div>
+                </button>
+                
+                <button class="pharmacy-menu-btn" onclick="showScreen('medicine-inventory-screen')">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-content">
+                        <h4>View Inventory</h4>
+                        <p>Manage medicine stock levels across facilities</p>
+                    </div>
+                </button>
+                
+                <button class="pharmacy-menu-btn" onclick="showScreen('delete-medicine-screen')">
+                    <div class="menu-icon">🗑️</div>
+                    <div class="menu-content">
+                        <h4>Delete Medicine</h4>
+                        <p>Remove medicines with proper documentation</p>
+                    </div>
+                </button>
+                
+                <button class="pharmacy-menu-btn" onclick="showScreen('pharmacy-orders-screen')">
+                    <div class="menu-icon">📦</div>
+                    <div class="menu-content">
+                        <h4>Orders & Prescriptions</h4>
+                        <p>View patient orders from all consultations</p>
+                    </div>
+                </button>
+                
+                <button class="pharmacy-menu-btn" onclick="showScreen('reports-screen')">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-content">
+                        <h4>Reports</h4>
+                        <p>Generate facility reports and analytics</p>
+                    </div>
+                </button>
+                
+                <button class="pharmacy-menu-btn" onclick="showScreen('settings-screen')">
+                    <div class="menu-icon">⚙️</div>
+                    <div class="menu-content">
+                        <h4>Settings</h4>
+                        <p>System configuration and preferences</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Medicine Screen -->
+    <div id="add-medicine-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('pharmacy-dashboard-screen')">←</button>
+                <h3>Add New Medicine</h3>
+            </div>
+            
+            <form class="form pharmacy-form" id="add-medicine-form">
+                <div class="form-section">
+                    <h4>Basic Information</h4>
+                    
+                    <div class="input-group">
+                        <label>Medicine Name*</label>
+                        <input type="text" id="medicine-name" placeholder="Enter medicine name" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Generic Name</label>
+                        <input type="text" id="generic-name" placeholder="Enter generic name">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Medicine Category*</label>
+                        <select id="medicine-category" required>
+                            <option value="">Select Category</option>
+                            <option value="tablet">Tablet</option>
+                            <option value="capsule">Capsule</option>
+                            <option value="syrup">Syrup/Liquid</option>
+                            <option value="injection">Injection</option>
+                            <option value="drops">Drops</option>
+                            <option value="cream">Cream/Ointment</option>
+                            <option value="inhaler">Inhaler</option>
+                            <option value="powder">Powder</option>
+                            <option value="spray">Spray</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Strength/Dosage</label>
+                        <input type="text" id="medicine-strength" placeholder="e.g., 500mg, 5ml, 10%">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Manufacturer Details</h4>
+                    
+                    <div class="input-group">
+                        <label>Manufacturer*</label>
+                        <input type="text" id="manufacturer" placeholder="Enter manufacturer name" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Batch Number*</label>
+                        <input type="text" id="batch-number" placeholder="Enter batch number" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Manufacturing Date*</label>
+                        <input type="date" id="mfg-date" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Expiry Date*</label>
+                        <input type="date" id="expiry-date" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Stock & Pricing</h4>
+                    
+                    <div class="input-group">
+                        <label>Quantity*</label>
+                        <input type="number" id="quantity" placeholder="Enter quantity" min="1" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Unit (per piece/bottle/strip)</label>
+                        <select id="unit-type">
+                            <option value="piece">Per Piece</option>
+                            <option value="strip">Per Strip</option>
+                            <option value="bottle">Per Bottle</option>
+                            <option value="box">Per Box</option>
+                            <option value="vial">Per Vial</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Purchase Price (₹)*</label>
+                        <input type="number" id="purchase-price" placeholder="Enter purchase price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Selling Price (₹)*</label>
+                        <input type="number" id="selling-price" placeholder="Enter selling price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Minimum Stock Level</label>
+                        <input type="number" id="min-stock" placeholder="Minimum stock threshold" min="0">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Additional Information</h4>
+                    
+                    <div class="input-group">
+                        <label>Storage Conditions</label>
+                        <select id="storage-conditions">
+                            <option value="">Select Storage Condition</option>
+                            <option value="room-temp">Room Temperature (15-25°C)</option>
+                            <option value="cool-dry">Cool & Dry Place</option>
+                            <option value="refrigerated">Refrigerated (2-8°C)</option>
+                            <option value="frozen">Frozen (Below 0°C)</option>
+                            <option value="protect-light">Protect from Light</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Prescription Required</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="prescription-required" value="yes" checked> Yes</label>
+                            <label><input type="radio" name="prescription-required" value="no"> No (OTC)</label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Drug Schedule</label>
+                        <select id="drug-schedule">
+                            <option value="">Select Schedule</option>
+                            <option value="schedule-h">Schedule H</option>
+                            <option value="schedule-h1">Schedule H1</option>
+                            <option value="schedule-x">Schedule X</option>
+                            <option value="otc">Over The Counter</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Additional Notes</label>
+                        <textarea id="medicine-notes" placeholder="Any additional notes about the medicine" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" onclick="addMedicine()">Add Medicine to Inventory</button>
+                    <button type="button" class="btn-secondary" onclick="clearForm()">Clear Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Medicine Inventory Screen -->
+    <div id="medicine-inventory-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('pharmacy-dashboard-screen')">←</button>
+                <h3>Medicine Inventory</h3>
+            </div>
+            
+            <div class="inventory-controls">
+                <div class="search-bar">
+                    <input type="text" id="inventory-search" placeholder="Search medicines by name, generic name, or batch..." oninput="filterInventory()">
+                    <button class="search-btn">🔍</button>
+                </div>
+                
+                <div class="filter-controls">
+                    <select id="category-filter" onchange="filterInventory()">
+                        <option value="">All Categories</option>
+                        <option value="tablet">Tablets</option>
+                        <option value="syrup">Syrups</option>
+                        <option value="injection">Injections</option>
+                        <option value="capsule">Capsules</option>
+                    </select>
+                    
+                    <select id="stock-filter" onchange="filterInventory()">
+                        <option value="">All Stock</option>
+                        <option value="low">Low Stock</option>
+                        <option value="expired">Expired</option>
+                        <option value="expiring">Expiring Soon</option>
+                        <option value="in-stock">In Stock</option>
+                    </select>
+                    
+                    <button class="btn-secondary" onclick="exportInventory()">Export CSV</button>
+                </div>
+            </div>
+            
+            <div class="inventory-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Total Medicines:</span>
+                    <span class="summary-value" id="total-medicines">156</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total Value:</span>
+                    <span class="summary-value" id="total-value">₹1,24,560</span>
+                </div>
+            </div>
+            
+            <div class="inventory-list" id="inventory-list">
+                <div class="inventory-item" data-category="tablet" data-status="in-stock">
+                    <div class="medicine-details">
+                        <h4>Paracetamol 500mg</h4>
+                        <p class="generic-name">Generic: Acetaminophen</p>
+                        <p class="manufacturer">Manufacturer: ABC Pharma</p>
+                        <p class="batch-info">Batch: PC001 | Mfg: 2024-01-15 | Exp: 2025-12-31</p>
+                        <div class="stock-info">
+                            <span class="stock-status good">Stock: 50 units</span>
+                            <span class="price-info">₹2.50/unit | Total: ₹125.00</span>
+                        </div>
+                        <div class="storage-info">Storage: Room Temperature</div>
+                    </div>
+                    <div class="inventory-actions">
+                        <button class="btn-small" onclick="editMedicine('med1')">Edit</button>
+                        <button class="btn-small" onclick="viewMedicine('med1')">View</button>
+                        <button class="btn-small-danger" onclick="deleteMedicine('med1')">Delete</button>
+                    </div>
+                </div>
+                
+                <div class="inventory-item" data-category="capsule" data-status="low">
+                    <div class="medicine-details">
+                        <h4>Amoxicillin 250mg</h4>
+                        <p class="generic-name">Generic: Amoxicillin</p>
+                        <p class="manufacturer">Manufacturer: XYZ Pharma</p>
+                        <p class="batch-info">Batch: AM001 | Mfg: 2023-08-15 | Exp: 2024-08-15</p>
+                        <div class="stock-info">
+                            <span class="stock-status low">Stock: 5 units (Low Stock)</span>
+                            <span class="price-info">₹15.00/unit | Total: ₹75.00</span>
+                        </div>
+                        <div class="storage-info">Storage: Cool & Dry Place</div>
+                    </div>
+                    <div class="inventory-actions">
+                        <button class="btn-small" onclick="editMedicine('med2')">Edit</button>
+                        <button class="btn-small" onclick="viewMedicine('med2')">View</button>
+                        <button class="btn-small-danger" onclick="deleteMedicine('med2')">Delete</button>
+                    </div>
+                </div>
+                
+                <div class="inventory-item" data-category="syrup" data-status="expiring">
+                    <div class="medicine-details">
+                        <h4>Cough Syrup 100ml</h4>
+                        <p class="generic-name">Generic: Dextromethorphan</p>
+                        <p class="manufacturer">Manufacturer: DEF Pharma</p>
+                        <p class="batch-info">Batch: CS001 | Mfg: 2023-06-20 | Exp: 2024-06-20</p>
+                        <div class="stock-info">
+                            <span class="stock-status warning">Stock: 15 bottles (Expiring Soon)</span>
+                            <span class="price-info">₹45.00/bottle | Total: ₹675.00</span>
+                        </div>
+                        <div class="storage-info">Storage: Room Temperature</div>
+                    </div>
+                    <div class="inventory-actions">
+                        <button class="btn-small" onclick="editMedicine('med3')">Edit</button>
+                        <button class="btn-small" onclick="viewMedicine('med3')">View</button>
+                        <button class="btn-small-danger" onclick="deleteMedicine('med3')">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Medicine Screen -->
+    <div id="delete-medicine-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('medicine-inventory-screen')">←</button>
+                <h3>Delete Medicine</h3>
+            </div>
+            
+            <div class="delete-warning">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-text">
+                    <strong>Important:</strong> Deleting medicines requires proper documentation and authorization. 
+                    Please ensure you have the necessary permissions before proceeding.
+                </div>
+            </div>
+            
+            <div class="search-section">
+                <div class="input-group">
+                    <label>Search Medicine to Delete</label>
+                    <input type="text" id="search-medicine-delete" placeholder="Search by name, batch number, or generic name" oninput="searchMedicinesForDeletion()">
+                </div>
+            </div>
+            
+            <div class="medicine-list" id="medicine-delete-list">
+                <div class="medicine-item selectable" onclick="selectMedicineForDeletion(this, 'med1')">
+                    <div class="medicine-info">
+                        <h4>Paracetamol 500mg</h4>
+                        <p>Batch: PC001 | Qty: 50 units | Exp: 2025-12-31</p>
+                        <p>Manufacturer: ABC Pharma | Price: ₹2.50/unit</p>
+                    </div>
+                    <div class="selection-indicator">Select</div>
+                </div>
+                
+                <div class="medicine-item selectable" onclick="selectMedicineForDeletion(this, 'med2')">
+                    <div class="medicine-info">
+                        <h4>Amoxicillin 250mg</h4>
+                        <p>Batch: AM001 | Qty: 5 units | Exp: 2024-08-15</p>
+                        <p>Manufacturer: XYZ Pharma | Price: ₹15.00/unit</p>
+                    </div>
+                    <div class="selection-indicator">Select</div>
+                </div>
+                
+                <div class="medicine-item selectable" onclick="selectMedicineForDeletion(this, 'med3')">
+                    <div class="medicine-info">
+                        <h4>Cough Syrup 100ml</h4>
+                        <p>Batch: CS001 | Qty: 15 bottles | Exp: 2024-06-20</p>
+                        <p>Manufacturer: DEF Pharma | Price: ₹45.00/bottle</p>
+                    </div>
+                    <div class="selection-indicator">Select</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Medicine Reason Screen -->
+    <div id="delete-reason-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('delete-medicine-screen')">←</button>
+                <h3>Deletion Authorization Form</h3>
+            </div>
+            
+            <div class="selected-medicine-info" id="selected-medicine-info">
+                <h4>Medicine Selected for Deletion:</h4>
+                <div class="medicine-details">
+                    <p><strong>Name:</strong> <span id="delete-medicine-name">Paracetamol 500mg</span></p>
+                    <p><strong>Batch Number:</strong> <span id="delete-batch-number">PC001</span></p>
+                    <p><strong>Quantity:</strong> <span id="delete-quantity">50 units</span></p>
+                    <p><strong>Total Value:</strong> <span id="delete-total-value">₹125.00</span></p>
+                </div>
+            </div>
+            
+            <form class="form pharmacy-form" id="deletion-form">
+                <div class="form-section">
+                    <h4>Deletion Details</h4>
+                    
+                    <div class="input-group">
+                        <label>Primary Reason for Deletion*</label>
+                        <select id="deletion-reason" onchange="toggleOtherReason()" required>
+                            <option value="">Select Primary Reason</option>
+                            <option value="expired">Medicine Expired</option>
+                            <option value="damaged">Damaged/Contaminated Product</option>
+                            <option value="recalled">Manufacturer/Regulatory Recall</option>
+                            <option value="incorrect-entry">Incorrect Data Entry</option>
+                            <option value="customer-return">Customer Return (Unopened)</option>
+                            <option value="stock-audit">Stock Audit Discrepancy</option>
+                            <option value="quality-issue">Quality Control Issue</option>
+                            <option value="theft-loss">Theft/Loss</option>
+                            <option value="transfer-out">Transfer to Another Location</option>
+                            <option value="other">Other (Please Specify)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group" id="other-reason-group" style="display: none;">
+                        <label>Please Specify Other Reason*</label>
+                        <input type="text" id="other-reason" placeholder="Enter specific reason for deletion">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Detailed Explanation*</label>
+                        <textarea id="deletion-explanation" placeholder="Provide detailed explanation for the deletion. Include circumstances, discovery method, and any relevant information." rows="4" required></textarea>
+                        <div class="char-count">0/500 characters</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Disposal Method</label>
+                        <select id="disposal-method">
+                            <option value="">Select Disposal Method</option>
+                            <option value="return-supplier">Return to Supplier</option>
+                            <option value="pharmaceutical-waste">Pharmaceutical Waste Disposal</option>
+                            <option value="incineration">Incineration</option>
+                            <option value="transfer">Transfer to Another Facility</option>
+                            <option value="patient-counseling">Patient Counseling (Return Program)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Authorization & Documentation</h4>
+                    
+                    <div class="input-group">
+                        <label>Requested By</label>
+                        <input type="text" id="requested-by" value="Dr. Priya Sharma (PH001)" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Authorized By (Supervisor)*</label>
+                        <select id="authorized-by" required>
+                            <option value="">Select Authorizing Officer</option>
+                            <option value="supervisor1">Dr. Rajesh Kumar - Chief Pharmacist</option>
+                            <option value="supervisor2">Dr. Anita Sharma - Pharmacy Supervisor</option>
+                            <option value="supervisor3">Dr. Vikram Singh - Medical Officer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Authorization Date & Time</label>
+                        <input type="datetime-local" id="deletion-datetime" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Reference Document Number</label>
+                        <input type="text" id="reference-doc" placeholder="Enter reference document number (if any)">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Witness (if required)</label>
+                        <input type="text" id="witness" placeholder="Name of witness to deletion process">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Acknowledgment & Confirmation</h4>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirm-authority" required>
+                            I confirm that I have the authority to delete this medicine from inventory
+                        </label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirm-documentation" required>
+                            I confirm that proper documentation will be maintained for audit purposes
+                        </label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirm-irreversible" required>
+                            I understand that this action is irreversible and will be logged permanently
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="final-warning">
+                    <div class="warning-box">
+                        <p>⚠️ <strong>Final Warning:</strong> This action will permanently remove the medicine from inventory. 
+                        All data will be archived for regulatory compliance. Please ensure all information is accurate.</p>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-danger" onclick="confirmMedicineDeletion()">Confirm Deletion</button>
+                    <button type="button" class="btn-secondary" onclick="showScreen('delete-medicine-screen')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pharmacy Orders Screen -->
+    <div id="pharmacy-orders-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('pharmacy-dashboard-screen')">←</button>
+                <h3>Orders & Prescriptions</h3>
+            </div>
+            
+            <div class="orders-controls">
+                <div class="orders-filters">
+                    <select id="order-status-filter" onchange="filterOrders()">
+                        <option value="">All Orders</option>
+                        <option value="pending">Pending Review</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="ready">Ready for Pickup</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    
+                    <select id="priority-filter" onchange="filterOrders()">
+                        <option value="">All Priorities</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                    
+                    <input type="date" id="order-date-filter" onchange="filterOrders()">
+                    
+                    <button class="btn-secondary" onclick="refreshOrders()">Refresh</button>
+                </div>
+                
+                <div class="orders-summary">
+                    <span class="summary-item">Total: <strong id="total-orders">5</strong></span>
+                    <span class="summary-item">Pending: <strong id="pending-orders">2</strong></span>
+                    <span class="summary-item">Ready: <strong id="ready-orders">2</strong></span>
+                    <span class="summary-item">Completed Today: <strong id="completed-today">1</strong></span>
+                </div>
+            </div>
+            
+            <div class="orders-list" id="orders-list">
+                <div class="order-item" data-status="pending" data-priority="urgent">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h4>Order #ORD001</h4>
+                            <span class="order-status pending">Pending Review</span>
+                            <span class="priority-badge urgent">Urgent</span>
+                        </div>
+                        <div class="order-meta">
+                            <div class="order-date">Sept 23, 2025 - 10:30 AM</div>
+                            <div class="consultation-id">Consultation ID: CONS123</div>
+                        </div>
+                    </div>
+                    
+                    <div class="patient-section">
+                        <h5>Patient Information</h5>
+                        <div class="patient-details">
+                            <div class="patient-basic">
+                                <p><strong>Name:</strong> Rayudu Somi Setty</p>
+                                <p><strong>Age:</strong> 19 Years | <strong>Gender:</strong> Male</p>
+                                <p><strong>Patient ID:</strong> 1018259369185939</p>
+                            </div>
+                            <div class="patient-contact">
+                                <p><strong>Mobile:</strong> 9494588144</p>
+                                <p><strong>Address:</strong> Eluru Rd, Vijayawada, Andhra Pradesh - 520008</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prescription-section">
+                        <h5>Prescription by Dr. Naveen Kumar (MBBS, Anaesthesia)</h5>
+                        <div class="doctor-info">
+                            <p><strong>Registration:</strong> MCI12345 | <strong>Date:</strong> Sept 23, 2025</p>
+                            <p><strong>Diagnosis:</strong> Viral Fever, Headache</p>
+                        </div>
+                        
+                        <div class="prescribed-medicines">
+                            <div class="prescribed-item">
+                                <div class="medicine-name">
+                                    <strong>Paracetamol 500mg</strong>
+                                    <span class="availability in-stock">✓ In Stock</span>
+                                </div>
+                                <p class="dosage">Dosage: 1 tablet twice daily after meals for 3 days</p>
+                                <p class="quantity">Quantity Required: 6 tablets</p>
+                                <p class="instructions">Special Instructions: Take with water, avoid empty stomach</p>
+                            </div>
+                            
+                            <div class="prescribed-item">
+                                <div class="medicine-name">
+                                    <strong>Cough Syrup (Dextromethorphan)</strong>
+                                    <span class="availability in-stock">✓ In Stock</span>
+                                </div>
+                                <p class="dosage">Dosage: 5ml three times daily for 5 days</p>
+                                <p class="quantity">Quantity Required: 1 bottle (100ml)</p>
+                                <p class="instructions">Special Instructions: Shake well before use</p>
+                            </div>
+                        </div>
+                        
+                        <div class="prescription-notes">
+                            <p><strong>Additional Notes:</strong> Patient has mild fever. Ensure adequate rest and hydration. Follow up if symptoms persist beyond 5 days.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn-primary" onclick="processOrder('ORD001')">Start Processing</button>
+                        <button class="btn-secondary" onclick="viewFullPrescription('ORD001')">View Full Prescription</button>
+                        <button class="btn-secondary" onclick="contactPatient('ORD001')">Contact Patient</button>
+                    </div>
+                </div>
+                
+                <div class="order-item" data-status="ready" data-priority="normal">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h4>Order #ORD002</h4>
+                            <span class="order-status ready">Ready for Pickup</span>
+                            <span class="priority-badge normal">Normal</span>
+                        </div>
+                        <div class="order-meta">
+                            <div class="order-date">Sept 22, 2025 - 2:15 PM</div>
+                            <div class="consultation-id">Consultation ID: CONS124</div>
+                        </div>
+                    </div>
+                    
+                    <div class="patient-section">
+                        <h5>Patient Information</h5>
+                        <div class="patient-details">
+                            <div class="patient-basic">
+                                <p><strong>Name:</strong> Priya Sharma</p>
+                                <p><strong>Age:</strong> 35 Years | <strong>Gender:</strong> Female</p>
+                                <p><strong>Patient ID:</strong> 1018259369185940</p>
+                            </div>
+                            <div class="patient-contact">
+                                <p><strong>Mobile:</strong> 9876543210</p>
+                                <p><strong>Address:</strong> MG Road, Vijayawada, Andhra Pradesh - 520010</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prescription-section">
+                        <h5>Prescription by Dr. Anita Gupta (MD, General Medicine)</h5>
+                        <div class="doctor-info">
+                            <p><strong>Registration:</strong> MCI67890 | <strong>Date:</strong> Sept 22, 2025</p>
+                            <p><strong>Diagnosis:</strong> Upper Respiratory Tract Infection</p>
+                        </div>
+                        
+                        <div class="prescribed-medicines">
+                            <div class="prescribed-item">
+                                <div class="medicine-name">
+                                    <strong>Amoxicillin 250mg</strong>
+                                    <span class="availability prepared">✓ Prepared</span>
+                                </div>
+                                <p class="dosage">Dosage: 1 capsule three times daily for 7 days</p>
+                                <p class="quantity">Quantity Dispensed: 21 capsules</p>
+                                <p class="instructions">Take with food to avoid stomach upset</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-billing">
+                        <div class="billing-details">
+                            <p><strong>Subtotal:</strong> ₹315.00</p>
+                            <p><strong>GST (12%):</strong> ₹37.80</p>
+                            <p><strong>Total Amount:</strong> ₹352.80</p>
+                        </div>
+                        <div class="payment-status">
+                            <span class="payment-pending">Payment Pending</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn-success" onclick="completeOrder('ORD002')">Mark as Delivered</button>
+                        <button class="btn-secondary" onclick="printBill('ORD002')">Print Bill</button>
+                        <button class="btn-secondary" onclick="sendSMS('ORD002')">Send SMS</button>
+                    </div>
+                </div>
+                
+                <div class="order-item" data-status="completed" data-priority="normal">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h4>Order #ORD003</h4>
+                            <span class="order-status completed">Completed</span>
+                            <span class="priority-badge normal">Normal</span>
+                        </div>
+                        <div class="order-meta">
+                            <div class="order-date">Sept 21, 2025 - 11:45 AM</div>
+                            <div class="completion-time">Completed: Sept 21, 2025 - 4:30 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="patient-section">
+                        <h5>Patient Information</h5>
+                        <div class="patient-details">
+                            <div class="patient-basic">
+                                <p><strong>Name:</strong> Vikram Singh</p>
+                                <p><strong>Age:</strong> 42 Years | <strong>Gender:</strong> Male</p>
+                                <p><strong>Patient ID:</strong> 1018259369185941</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <p><strong>Items Dispensed:</strong> Paracetamol 500mg (12 tablets), Antacid Syrup (1 bottle)</p>
+                        <p><strong>Total Amount Paid:</strong> ₹185.50</p>
+                        <p><strong>Payment Method:</strong> Cash</p>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn-secondary" onclick="viewOrderDetails('ORD003')">View Details</button>
+                        <button class="btn-secondary" onclick="reprintBill('ORD003')">Reprint Bill</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Screen -->
+    <div id="reports-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('pharmacy-dashboard-screen')">←</button>
+                <h3>Reports & Analytics</h3>
+            </div>
+            
+            <div class="reports-menu">
+                <button class="report-btn" onclick="generateInventoryReport()">
+                    <div class="report-icon">📊</div>
+                    <h4>Inventory Report</h4>
+                    <p>Current stock levels and valuations</p>
+                </button>
+                
+                <button class="report-btn" onclick="generateSalesReport()">
+                    <div class="report-icon">💰</div>
+                    <h4>Sales Report</h4>
+                    <p>Daily, weekly, and monthly sales</p>
+                </button>
+                
+                <button class="report-btn" onclick="generateExpiryReport()">
+                    <div class="report-icon">⏰</div>
+                    <h4>Expiry Report</h4>
+                    <p>Medicines expiring in next 6 months</p>
+                </button>
+                
+                <button class="report-btn" onclick="generateDeletedItemsReport()">
+                    <div class="report-icon">🗑️</div>
+                    <h4>Deleted Items Report</h4>
+                    <p>Log of all deleted medicines</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('pharmacy-dashboard-screen')">←</button>
+                <h3>System Settings</h3>
+            </div>
+            
+            <div class="settings-menu">
+                <button class="setting-item" onclick="manageUsers()">
+                    <span class="setting-icon">👥</span>
+                    <span class="setting-text">User Management</span>
+                    <span class="setting-arrow">→</span>
+                </button>
+                
+                <button class="setting-item" onclick="systemPreferences()">
+                    <span class="setting-icon">⚙️</span>
+                    <span class="setting-text">System Preferences</span>
+                    <span class="setting-arrow">→</span>
+                </button>
+                
+                <button class="setting-item" onclick="backupData()">
+                    <span class="setting-icon">💾</span>
+                    <span class="setting-text">Backup & Restore</span>
+                    <span class="setting-arrow">→</span>
+                </button>
+                
+                <button class="setting-item" onclick="auditLogs()">
+                    <span class="setting-icon">📋</span>
+                    <span class="setting-text">Audit Logs</span>
+                    <span class="setting-arrow">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="pharmacy.js"></script>
+</body>
+</html>
