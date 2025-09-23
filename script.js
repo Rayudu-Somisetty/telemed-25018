@@ -530,12 +530,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // Service Worker registration for PWA capabilities (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(function(registration) {
-                console.log('ServiceWorker registration successful');
+                console.log('ServiceWorker registration successful:', registration.scope);
             })
             .catch(function(err) {
-                console.log('ServiceWorker registration failed');
+                console.log('ServiceWorker registration failed:', err);
+                // Gracefully handle the error - app will still work without service worker
             });
     });
 }
